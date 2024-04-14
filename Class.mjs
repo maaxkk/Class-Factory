@@ -13,30 +13,45 @@ const MyClass = (() => {
 
   function publicMethod(name, value) {
     //prettier way to create class methods
-    myClass.prototype[name] = value
+    myClass2.prototype[name] = value
+    console.log('.prototype', name)
+    console.log(myClass2.prototype[name])
+    console.log(myClass2.prototype)
   }
 
-  function myClass(value) {
+  function myClass2(value, secret) {
     /* Hidden instance stuff needs to be defined in the constructor */
     initHidden(this)
     setHiddenProp(this, '_hiddenProp', "I'm hidden!")
     setHiddenMethod(this, '_hiddenFunc', function() {
       return getHiddenProp(this, '_hiddenProp')
     })
+    setHiddenProp(this, '_mySecret', `secret is ${secret}` )
+    setHiddenMethod(this, '_getSecret', function() {
+      return getHiddenProp(this, '_mySecret')
+    })
 
     this.value = value
   }
-  
+
   publicMethod('usesHidden', function() {
     return useHiddenMethod(this, '_hiddenFunc')
   })
 
-  return myClass
+  publicMethod('getSecretPublic', function () {
+    return useHiddenMethod(this, '_getSecret')
+  })
+
+  return myClass2
 })()
 
-const myClass = new MyClass(5)
+const myClass = new MyClass(5, 'I\'m an AI')
 console.log(myClass)
 console.log(myClass.usesHidden())
+console.log(myClass.value)
+console.log(myClass.getSecretPublic())
+console.log(myClass)
+
 
 /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 function ClassMaker(constructor, publicProps = {}, hiddenStaticProps = {}) {
@@ -64,13 +79,14 @@ function ClassMaker(constructor, publicProps = {}, hiddenStaticProps = {}) {
 
 const MyClass2 = ClassMaker(
   // create a constructor that utilizes hidden instance stuff
-  function constructor(name) {
+  function constructor(name, smth) {
     initHidden(this)
     setHiddenProp(this, '_message', "Created by ClassMaker!")
     setHiddenMethod(this, '_getMessage', function() {
       return getHiddenProp(this, '_message')
     })
     this.name = name
+    this.smth = smth
   },
 
   // add public methods/properties
@@ -89,7 +105,8 @@ const MyClass2 = ClassMaker(
   
 )
 
-const myClass2Instance = new MyClass2("My Class2 Instance")
+const myClass2Instance = new MyClass2("My Class2 Instance", 'something else')
+console.log(myClass2Instance)
 console.log(myClass2Instance.name)
 console.log(myClass2Instance.getMessage())
 console.log(myClass2Instance.showHiddenStaticProp())
