@@ -1,3 +1,5 @@
+"use strict";
+
 import {
   initHidden, 
   setHiddenMethod, 
@@ -84,8 +86,12 @@ const MyClass2 = ClassMaker(
     setHiddenProp(this, '_message', "Created by ClassMaker!")
     setHiddenMethod(this, '_getMessage', function() {
       return getHiddenProp(this, '_message')
+    });
+    setHiddenProp(this, '_name', `Cool ${name}`)
+    setHiddenMethod(this, '_getName', function() {
+      return getHiddenProp(this, '_name')
     })
-    this.name = name
+    // this.name = name
     this.smth = smth
   },
 
@@ -93,6 +99,9 @@ const MyClass2 = ClassMaker(
   {
     getMessage() {
       return useHiddenMethod(this, '_getMessage')
+    },
+    getName() {
+      return useHiddenMethod(this, '_getName');
     },
     showHiddenStaticProp() {return getHiddenProp(this.constructor, '_hiddenStaticProperty')},
     setHiddenStaticProp(value) {return setHiddenProp(this.constructor, '_hiddenStaticProperty', value)}
@@ -105,9 +114,9 @@ const MyClass2 = ClassMaker(
   
 )
 
-const myClass2Instance = new MyClass2("My Class2 Instance", 'something else')
-console.log(myClass2Instance)
-console.log(myClass2Instance.name)
+const myClass2Instance = new MyClass2("random name", 'something else')
+console.log(myClass2Instance) // getName is in object chain
+console.log(myClass2Instance.getName()) // cool random Name
 console.log(myClass2Instance.getMessage())
 console.log(myClass2Instance.showHiddenStaticProp())
 myClass2Instance.setHiddenStaticProp('New value!')

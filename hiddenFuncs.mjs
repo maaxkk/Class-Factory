@@ -1,3 +1,6 @@
+"use strict";
+
+
 const hiddenMethods = new WeakMap()
 const hiddenProps = new WeakMap()
 
